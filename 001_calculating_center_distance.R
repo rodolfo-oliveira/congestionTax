@@ -24,20 +24,22 @@ ids <- which(is.na(over(origens, centro))[,1]==FALSE | is.na(over(destinos, cent
 database$km <- 0
 database$km_pedagio <- 0
 
-aux <- database
 
 
 
-for(i in 1:length(aux$ZONA)){
+
+for(i in 1:length(database$ZONA)){
   
   res <- distancia_viagem_centro(origem = origens[i,], 
                                  destino = destinos[i,],
                                  area = centro)
   
-  aux$km[i] <- res[1]
-  aux$km_pedagio[i] <- res[2]
+  database$km[i] <- res[1]
+  database$km_pedagio[i] <- res[2]
   
-  print(c(i," ", aux$km[i], aux$km_pedagio[i]))
-  Sys.sleep(0.6)
+  print(c(i," ", database$km[i], database$km_pedagio[i]))
+  #Sys.sleep(0.9)
 }
+  
+write.csv(database, "Base_alterada.csv")
   
