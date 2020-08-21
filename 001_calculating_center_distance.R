@@ -1,4 +1,5 @@
 library(osrm)
+options(osrm.server = "http://127.0.0.1:5000/")
 library(dplyr)
 library(rgdal)
 source('501_OD_processing_functions.R')
