@@ -82,6 +82,7 @@ flag_integration <- function(aux){
         }
       
       if(aux$modal[i] == 4){
+        aux$SPTRANS[i] <- T
         if(onibus == 1){
           aux$integrado[i] <- mod_ant
 
