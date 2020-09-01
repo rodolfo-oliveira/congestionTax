@@ -1,27 +1,16 @@
 #funcao para estimar o valor das corridas
 library(dplyr)
 
-estimate_fare <- function(aux){
+estimate_fare <- function(database){
   
-  #01 - Metrô
-  #02 - Trem
-  #03 - Monotrilho
-  #04 - Ônibus/micro-ônibus/perua do município de São Paulo
-  #05 - Ônibus/micro-ônibus/perua de outros municípios
-  #06 - Ônibus/micro-ônibus/perua metropolitano
-  #07 - Transporte Fretado
-  #08 - Transporte Escolar
-  #09 - Dirigindo Automóvel
-  #10 - Passageiro de Automóvel
-  #11 - Táxi Convencional
-  #12 - Táxi não Convencional
-  #13 - Dirigindo Moto
-  #14 - Passageiro de Moto
-  #15 - Bicicleta
-  #16 - A Pé
-  #17 - Outros
-  for(i 1:length(aux$trecho)){
-    
+  fares <- estimate_fare_unit(database[1,])
+  
+  for(i in 2:length(database$ZONA)){
+    aux <- estimate_fare_unit(database_line = database[i,])
+    fares <- rbind(fares, aux)
+    print(paste0("Andamento do cálculo das tarifas: ", round(100*i/length(database$ZONA),digits = 2), "%"))
   }
+  
+  return(cbind(database, fares))
 
 }
