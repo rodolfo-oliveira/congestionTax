@@ -2,7 +2,7 @@
 library(dplyr)
 
 get_fare <- function(aux){
-  if(aux$pag_viag == 2) VT <- T
+  if(aux$pag_viag %in% 2) VT <- T
   else VT <- F
   
   if(aux$modal %in% c(1,2,3)){
@@ -49,4 +49,5 @@ get_fare <- function(aux){
       }
     }
   }
+  return(NA)
 }

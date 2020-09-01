@@ -1,6 +1,7 @@
 #funcao para estimar o valor de uma corrida
 library(dplyr)
 
+
 estimate_fare_unit <- function(database_line){
   
   #01 - Metrô
@@ -32,6 +33,12 @@ estimate_fare_unit <- function(database_line){
     aux <- rbind(aux, tibble(trecho=i, modal = trechos[i], integrado=0, valor=0, SPTRANS=F, mun_origin = trechos_ori[i], pag_viag = database_line$PAG_VIAG))  
   }
   
+  
+  aux <- get_trip_fare(aux)
+  
+  return(data.frame(valor_total = sum(aux$valor, na.rm = T), 
+             valor_SPTtrans = sum(aux$valor[aux$SPTRANS==T]), 
+             VT = ifelse(aux$pag_viag[1]%in%2, T, F)))
 
    
 }
