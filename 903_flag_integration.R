@@ -3,107 +3,42 @@
 library(dplyr)
 
 flag_integration <- function(aux){
-  onibus <- 0
-  metro <- 0
-  cptm <- 0
   
   for(i in 1:length(aux$trecho)){
-    if(i==1){
-      if(aux$modal[i] == 1) metro = 1
-      if(aux$modal[i] == 2) cptm = 1
-      if(aux$modal[i] == 3) metro = 1
-      if(aux$modal[i] == 4){
-          onibus = 1
-          aux$SPTRANS[i] <- T
+    if(aux$modal[i] == 4){
+      
+      if(aux$integracao_BU_onibus_metro[i] == 0){
+        if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 1
+      }else{
+        aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 0
+        if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i] <- 3
       }
-      mod_ant <- aux$modal[i]
+      if(aux$integracao_BU_onibus[i] == 0){
+        aux$integracao_BU_onibus[i:length(aux$trecho)] <- 1
+        aux$integracao_BU_onibus[i] <- 2
+      }
+      
+      aux$integracao_BU_metro[i:length(aux$trecho)] <- 0
+      
+    }else if(aux$modal[i] %in% c(1,2,3)){
+      
+      if(aux$integracao_BU_onibus_metro[i] == 0){
+        if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 1
+      }else if (aux$integracao_BU_metro[i] == 0){
+        aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 0
+        if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i] <- 3
+      }
+      if(aux$integracao_BU_metro[i] == 0){
+       aux$integracao_BU_metro[i:length(aux$trecho)] <- 1
+       aux$integracao_BU_metro[i] <- 2 
+      }
     }
-    
-    if(i>1){
-      if(aux$modal[i] == 1){
-        if(onibus == 1){
-          aux$integrado[i] <- mod_ant
-          metro <- 1
-        }
-        else if(metro == 1){
-          aux$integrado[i] <- 0
-        }
-        else if(cptm == 1){
-          aux$integrado[i] <- mod_ant
-          metro <- 1
-          cptm <- 0
-        }
-        else{
-          aux$integrado[i] <- 0
-          metro <- 1
-        }
-      }
-      
-      if(aux$modal[i] == 2){
-        if(onibus == 1){
-          aux$integrado[i] <- mod_ant
-          cptm <- 1
-        }
-        else if(metro == 1){
-          aux$integrado[i] <- mod_ant
-          metro <- 0
-          cptm <- 1
-
-        }
-        else if(cptm == 1){
-          aux$integrado[i] <- 0
-
-        }
-        else{
-          aux$integrado[i] <- 0
-          cptm <- 1
-        }
-      }
-      if(aux$modal[i] == 3){
-        if(onibus == 1){
-          aux$integrado[i] <- mod_ant
-          cptm <- 1
-
-        }
-        else if(metro == 1){
-          aux$integrado[i] <- mod_ant
-          metro <- 0
-          cptm <- 1
-
-        }
-        else if(cptm == 1){
-          aux$integrado[i] <- 0
-
-        }
-        else{
-          aux$integrado[i] <- 0
-          cptm <- 1
-          }
-        }
-      
-      if(aux$modal[i] == 4){
-        aux$SPTRANS[i] <- T
-        if(onibus == 1){
-          aux$integrado[i] <- mod_ant
-
-        }
-        else if(metro == 1){
-          aux$integrado[i] <- mod_ant
-          metro <- 0
-          onibus <- 1
-          }
-        else if(cptm == 1){
-          aux$integrado[i] <- mod_ant
-          cptm <- 0
-          onibus <- 1
-        }
-        else{
-          aux$integrado[i] <- 0
-          onibus <- 1
-        }
-      }
-      mod_ant <- aux$modal[i]       
+    else {
+      aux$integracao_BU_metro[i:length(aux$trecho)] <- 0
     }
   }
+  
+  
+  aux$SPTRANS[which(aux$modal==4)] <- TRUE
   return(aux)
 }

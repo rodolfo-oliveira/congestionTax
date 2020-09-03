@@ -30,7 +30,15 @@ estimate_fare_unit <- function(database_line){
   
   for(i in 1:length(trechos)){
   
-    aux <- rbind(aux, tibble(trecho=i, modal = trechos[i], integrado=0, valor=0, SPTRANS=F, mun_origin = trechos_ori[i], pag_viag = database_line$PAG_VIAG))  
+    aux <- rbind(aux, tibble(trecho = i,
+                             modal = trechos[i], 
+                             integracao_BU_onibus = 0, 
+                             integracao_BU_metro = 0, 
+                             integracao_BU_onibus_metro = 0,
+                             valor = 0, 
+                             SPTRANS = F, 
+                             mun_origin = trechos_ori[i],
+                             pag_viag = database_line$PAG_VIAG))  
   }
   
   
