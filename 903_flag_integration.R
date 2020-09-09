@@ -10,8 +10,10 @@ flag_integration <- function(aux){
       if(aux$integracao_BU_onibus_metro[i] == 0){
         if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 1
       }else{
-        aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 0
-        if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i] <- 3
+        if(TRUE %in% (aux$integracao_BU_metro!=0)){
+          aux$integracao_BU_onibus_metro[i:length(aux$trecho)] <- 0
+          if(2 %in% aux$integracao_BU_onibus_metro[1:i] == F & 3 %in% aux$integracao_BU_onibus_metro[1:i] == F) aux$integracao_BU_onibus_metro[i] <- 3
+        }
       }
       if(aux$integracao_BU_onibus[i] == 0){
         aux$integracao_BU_onibus[i:length(aux$trecho)] <- 1

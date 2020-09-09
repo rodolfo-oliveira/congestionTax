@@ -24,8 +24,9 @@ estimate_fare_unit <- function(database_line){
  
   trechos <- database_line[c("MODO1","MODO2","MODO3","MODO4")][is.na(database_line[c("MODO1","MODO2","MODO3","MODO4")])==F]
   trechos_ori <- database_line[,c("MUNI_O","MUNI_T1","MUNI_T2","MUNI_T3")][is.na(database_line[c("MODO1","MODO2","MODO3","MODO4")])==F]
+
   
-  aux <- tibble(trecho=0, modal = 0, integrado=0, valor=0, SPTRANS=F, mun_origin = 0, pag_viag = 0)
+  aux <- tibble(trecho=0, modal = 0, integrado=0, valor=0, SPTRANS=F, mun_origin = 0, pag_viag = 0, estudante = F, madrugador = F)
   aux <- aux[0,]
   
   for(i in 1:length(trechos)){
@@ -38,7 +39,10 @@ estimate_fare_unit <- function(database_line){
                              valor = 0, 
                              SPTRANS = F, 
                              mun_origin = trechos_ori[i],
-                             pag_viag = database_line$PAG_VIAG))  
+                             pag_viag = database_line$PAG_VIAG,
+                             estudante = ifelse(database_line$CD_ATIVI == 8, TRUE, FALSE),
+                             madrugador = ifelse(strptime(paste0(database_line$H_CHEG, ":", database_line$MIN_CHEG), format = "%H:%M") - minutes(database_line$DURACAO) + minutes(database_line$ANDA_O) < strptime("6:15", "%H:%M"),
+                                                 T,F)))  
   }
   
   
