@@ -3,6 +3,7 @@ library(dplyr)
 
 
 estimate_fare_unit <- function(database_line){
+  require(lubridate)
   
   #01 - Metrô
   #02 - Trem

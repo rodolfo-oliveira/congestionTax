@@ -11,6 +11,6 @@ database <- database[is.na(database$N_VIAG) == F,]
 #calculando os preços de viagens
 database <- estimate_fare(database)
 
-#write.csv2(database, "base_arrecadacao_SPTrans.csv")
+write.csv2(database, "base_arrecadacao_SPTrans.csv")
       
   
