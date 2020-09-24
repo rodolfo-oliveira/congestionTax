@@ -17,11 +17,11 @@ get_fare <- function(aux,i){
     
 
     
-    if(aux$integracao_BU_metro == 1){
+    if(aux$integracao_BU_metro[i] == 1){
       return(0)
     }
     
-    else if(aux$integracao_BU_onibus_metro == 3){
+    else if(aux$integracao_BU_onibus_metro[i] == 3){
       if(VT == T){
         if(madrugador == T){
           return(8.06)
@@ -29,15 +29,18 @@ get_fare <- function(aux,i){
         return(8.85)
       }
       else{
-        if(madrugador == T){
+        if(aux$estudante[i] == T) return(2.20)
+        
+        else if(madrugador == T){
           return(6.86)
+        }else{
+          return(7.65)
         }
-        return(7.65)
       }
     }
     
-    else if(aux$integracao_BU_metro==2){
-      if(aux$estudante) return(2.20)
+    else if(aux$integracao_BU_metro[i]==2){
+      if(aux$estudante[i]) return(2.20)
       return(4.40)
     }
   }
@@ -46,7 +49,7 @@ get_fare <- function(aux,i){
     
     if(isento == T) return(0)
     
-    if(aux$integracao_BU_onibus_metro == 3){
+    if(aux$integracao_BU_onibus_metro[i] == 3){
       if(aux$estudante[i] == T) return(2.20)
       if(VT == T){
         return(8.85)
@@ -56,11 +59,11 @@ get_fare <- function(aux,i){
       }
     }
     
-    else if(aux$integracao_BU_onibus == 1){
+    else if(aux$integracao_BU_onibus[i] == 1){
       return(0)
     }
     
-    if(aux$integracao_BU_onibus == 2){
+    if(aux$integracao_BU_onibus[i] == 2){
       if(VT == T){
         return(4.83)
       }

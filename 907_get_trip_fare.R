@@ -9,7 +9,7 @@ get_trip_fare <- function(aux){
     if(aux$integracao_BU_onibus_metro[i] != 3){
       aux$valor[i] <- get_fare(aux[i,])
       }else{
-      if(aux$estudante[i] == T) aux$valor[i] <- get_fare(aux[i,])
+      if(aux$estudante[i] == T & 2 %in% aux$pag_viag == F) aux$valor[i] <- get_fare(aux[i,])
       else{
         aux$valor[which(aux$integracao_BU_onibus_metro == 1)[1]] <- get_fare(aux[i,])/2
         aux$valor[i] <- get_fare(aux[i,])/2
