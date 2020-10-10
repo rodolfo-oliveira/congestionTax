@@ -79,7 +79,10 @@ get_fare <- function(aux,i){
     return(tarif_muni$tarifa[tarif_muni$mun==aux$mun_origin[i]])
   }
   if(aux$modal[i] == 6){
-    return(EMTU_dados$tarifa[EMTU_dados$origem==aux$mun_origin & EMTU_dados$destino == aux$mun_dest])
+    return(ifelse(length(EMTU_dados$tarifa[EMTU_dados$origem==aux$mun_origin & EMTU_dados$destino == aux$mun_dest])>0,
+                  EMTU_dados$tarifa[EMTU_dados$origem==aux$mun_origin & EMTU_dados$destino == aux$mun_dest],
+                  NA))
+   
   }
   return(NA)
 }
