@@ -2,6 +2,8 @@
 library(dplyr)
 
 get_fare <- function(aux,i){
+
+  
   if(2 %in% aux$pag_viag) VT <- T
   else VT <- F
   
@@ -24,24 +26,24 @@ get_fare <- function(aux,i){
     else if(aux$integracao_BU_onibus_metro[i] == 3){
       if(VT == T){
         if(madrugador == T){
-          return(8.06)
+          return(sp_fares$tarifa_SPTrans_Metro_VT_integracao_madrugador)
         }
-        return(8.85)
+        return(sp_fares$tarifa_SPTrans_Metro_VT_integracao)
       }
       else{
-        if(aux$estudante[i] == T) return(2.20)
+        if(aux$estudante[i] == T) return(sp_fares$tarifa_SPtrans_estudante)
         
         else if(madrugador == T){
-          return(6.86)
+          return(sp_fares$tarifa_SPtrans_Metro_integracao_madrugador)
         }else{
-          return(7.65)
+          return(sp_fares$tarifa_SPtrans_Metro_integracao)
         }
       }
     }
     
     else if(aux$integracao_BU_metro[i]==2){
-      if(aux$estudante[i]) return(2.20)
-      return(4.40)
+      if(aux$estudante[i]) return(sp_fares$tarifa_SPtrans_estudante)
+      return(sp_fares$tarifa_SPtrans_base)
     }
   }
   
@@ -50,12 +52,12 @@ get_fare <- function(aux,i){
     if(isento == T) return(0)
     
     if(aux$integracao_BU_onibus_metro[i] == 3){
-      if(aux$estudante[i] == T) return(2.20)
+      if(aux$estudante[i] == T) return(sp_fares$tarifa_SPtrans_estudante)
       if(VT == T){
-        return(8.85)
+        return(sp_fares$tarifa_SPTrans_Metro_VT_integracao)
       }
       else{
-        return(7.65)
+        return(sp_fares$tarifa_SPtrans_Metro_integracao)
       }
     }
     
@@ -65,13 +67,19 @@ get_fare <- function(aux,i){
     
     if(aux$integracao_BU_onibus[i] == 2){
       if(VT == T){
-        return(4.83)
+        return(sp_fares$tarifa_SPtrans_VT)
       }
       else{
-        if(aux$estudante[i] == T) return(2.20)
-        else return(4.40)
+        if(aux$estudante[i] == T) return(sp_fares$tarifa_SPtrans_estudante)
+        else return(sp_fares$tarifa_SPtrans_base)
       }
     }
+  }
+  if(aux$modal[i] == 5){
+    return(tarif_muni$tarifa[tarif_muni$mun==aux$mun_origin[i]])
+  }
+  if(aux$modal[i] == 6){
+    return(EMTU_dados$tarifa[EMTU_dados$origem==aux$mun_origin & EMTU_dados$destino == aux$mun_dest])
   }
   return(NA)
 }
