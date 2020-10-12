@@ -18,45 +18,65 @@ database <- database[database$MODO1 %in% c(1,2,3,4,5,6) |
 database <- estimate_fare(database)
 
 database2 <- vectorized_correcting_tariffs(database)
+database2 <- ind_share_family_income(database2)
 
 
-
-
-
-teste <- database2[,c("MODO1","MODO2","MODO3","MODO4","valor_total","valor_SPTtrans","VT","PAG_VIAG","FE_VIA","FE_PESS","H_SAIDA","CD_ATIVI","N_VIAG","ID_PESS")]
-
-
-sum(teste$valor_SPTtrans*teste$FE_VIA)*300
-
-sum(teste$valor_SPTtrans*teste$FE_VIA)*300
-
-#pessoa
-database2 %>%
+base_viagem <- database2[,c("ID_ORDEM","VT","CD_ATIVI", "PAG_VIAG","valor_total","valor_SPTtrans","ren_fam_ind","FE_VIA","ID_PESS","FE_PESS","ID_FAM","FE_FAM")]
+write.csv2(base_viagem, "resultados/base_viagens_total_4_40.csv")
+base_viagem %>%
   group_by(ID_PESS) %>%
-  summarise(total = sum(valor_total), total_sptrans = sum(valor_SPTtrans)) -> pessoa
+  summarise(ID_PESS = first(ID_PESS),
+            FE_PESS = first(FE_PESS),
+            CD_ATIVI = first(CD_ATIVI),
+            valor_total = sum(valor_total),
+            valor_SPTtrans = sum(valor_SPTtrans),
+            ren_fam_ind =first(ren_fam_ind),
+            ID_FAM = first(ID_FAM),
+            FE_FAM = first(FE_FAM)) -> base_pessoa
 
-merge(pessoa, unique(database2[,c("ID_PESS","FE_PESS")]), by="ID_PESS") -> pessoa
+write.csv2(base_pessoa, "resultados/base_pessoas_4_40.csv")
 
-sum(pessoa$total_sptrans*pessoa$FE_PESS)*300
-
-
-database2 %>%
-  group_by(ID_DOM) %>%
-  summarise(total = sum(valor_total), total_sptrans = sum(valor_SPTtrans)) -> domicilio
-
-merge(domicilio, unique(database2[,c("ID_DOM","FE_DOM")]), by="ID_DOM") -> domicilio
-
-sum(domicilio$total_sptrans*domicilio$FE_DOM)*300
-
-database2 %>%
+base_pessoa %>%
   group_by(ID_FAM) %>%
-  summarise(total = sum(valor_total), total_sptrans = sum(valor_SPTtrans)) -> familia
+  summarise(ID_FAM = first(ID_FAM),
+            FE_FAM = first(FE_FAM),
+            valor_total = sum(valor_total),
+            valor_SPTtrans = sum(valor_SPTtrans),
+            ren_fam =sum(ren_fam_ind)) -> base_familia
 
-merge(familia, unique(database2[,c("ID_FAM","FE_FAM")]), by="ID_FAM") -> familia
+write.csv2(base_familia, "resultados/base_familias_4_40.csv")
 
-sum(familia$total_sptrans*familia$FE_FAM)*300
+#rodando para passagemigual a 7,16
+
+tariff_values(base_SPTrans = 7.16)
+#calculando os preços de viagens
+database <- estimate_fare(database)
+
+database2 <- vectorized_correcting_tariffs(database)
+database2 <- ind_share_family_income(database2)
 
 
-write.csv2(database, "base_arrecadacao_SPTrans.csv")
-      
-  
+base_viagem <- database2[,c("ID_ORDEM","VT","CD_ATIVI", "PAG_VIAG","valor_total","valor_SPTtrans","ren_fam_ind","FE_VIA","ID_PESS","FE_PESS","ID_FAM","FE_FAM")]
+write.csv2(base_viagem, "resultados/base_viagens_total_7_16.csv")
+base_viagem %>%
+  group_by(ID_PESS) %>%
+  summarise(ID_PESS = first(ID_PESS),
+            FE_PESS = first(FE_PESS),
+            CD_ATIVI = first(CD_ATIVI),
+            valor_total = sum(valor_total),
+            valor_SPTtrans = sum(valor_SPTtrans),
+            ren_fam_ind =first(ren_fam_ind),
+            ID_FAM = first(ID_FAM),
+            FE_FAM = first(FE_FAM)) -> base_pessoa
+
+write.csv2(base_pessoa, "resultados/base_pessoas_7_16.csv")
+
+base_pessoa %>%
+  group_by(ID_FAM) %>%
+  summarise(ID_FAM = first(ID_FAM),
+            FE_FAM = first(FE_FAM),
+            valor_total = sum(valor_total),
+            valor_SPTtrans = sum(valor_SPTtrans),
+            ren_fam =sum(ren_fam_ind)) -> base_familia
+
+write.csv2(base_familia, "resultados/base_familias_7_16.csv")
